@@ -23,7 +23,7 @@
   },
   "scripts": {
     
-    "start": "node CustomerApi.js",
+    "start": "node app.js",
     "build": "react-scripts build",
     "test": "echo\"Error no test specified\"&& exit 1",
 
