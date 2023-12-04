@@ -23,7 +23,7 @@
   },
   "scripts": {
     
-    "start": "node CustomerApi.js",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "echo\"Error no test specified\"&& exit 1",
 
@@ -48,7 +48,7 @@
     ]
   },
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
-  "main": "CustpmerApi.js",
+  "main": "Node CustomerApi.js",
   "keywords": [],
   "author": "",
   "license": "ISC"
