@@ -22,7 +22,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    
+    "start": "node customer.js",
     "build": "react-scripts build",
     "test": "echo\"Error no test specified\"&& exit 1",
 
