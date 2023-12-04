@@ -1,0 +1,27 @@
+
+
+/* CSS */
+.card {
+  background-color: #009ffd;
+  height: 120px;
+  width: 120px;
+  border-radius: 10px;
+  margin: 5px;
+ 
+}
+
+.card.closed {
+  background-color: #009ffd;
+  opacity: 1;
+}
+
+.card.open {
+  background-color: white;
+  opacity: 1;
+}
+
+.card.changed {
+  background-color: #444444;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
