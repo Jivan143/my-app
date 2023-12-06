@@ -56,7 +56,7 @@ app.get("/cars", function (req, res) {
     res.send(arr1);
 });
 
-app.get("carmaster",function(req,res){
+app.get("/carmaster",function(req,res){
     res.send(CarDetails);
 })
 app.get("/cars/:id",function(req,res){
