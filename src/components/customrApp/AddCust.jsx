@@ -57,13 +57,14 @@ class AddCust extends Component{
     }
     render (){
         const { id,name,city,age,gender,payment}=this.state.customer;
+        const {edit}=this.state
 
         const {payments,genders}=this.state;
 
         return( <div className="container">
               <div className="form-group">
                 <label>Customer Id</label>
-                <input type="text" className="form-control" id="id" name="id" placeholder="Enter  Id"
+                <input type="text" className="form-control" id="id" name="id" placeholder="Enter  Id" disabled={edit}
                 value={id} onChange={this.handleChange}    />
             </div>
              <div className="form-group">
