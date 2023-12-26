@@ -5,8 +5,10 @@ class AddCar extends Component{
 
     state={
          car:{ id:"",price:"",kms:"",year:"",model:"",color:""},
+         carmaster:[],
         models:["Swift Dzire VXi","Etios SMi","City AXi","Swift DXi","Etios VXi","City ZXi"],
-        colors:["Red","White","Steel Grey","Metallic Blue","Black","Silver Grey"],
+        // colors:["Red","White","Steel Grey","Metallic Blue","Black","Silver Grey"],
+        // colors:[],
         edit:false,
     };
     
@@ -16,21 +18,27 @@ class AddCar extends Component{
     async componentDidUpdate( prevProps,prevState){
         if(prevProps!==this.props) this.fetchdata();
     }
-    async fetchdata(){
-        const{id}=this.props.match.params;
-        if(id){
-            let response=await http.get(`/cars/${id}`);
-            let {data}=response;
-            this.setState({car:data,edit:true });
+    async fetchdata() {
+        const { id } = this.props.match.params;
+      
+        let carmasterResponse = await http.get(`/carmaster`);
+        let carmasterData = carmasterResponse.data;
+      
+        if (id) {
+          let carResponse = await http.get(`/cars/${id}`);
+          let carData = carResponse.data;
+      
+          this.setState({ car: carData, edit: true, carmaster: carmasterData });
+        } else {
+          let car = { id: "", price: "", kms: "", year: "", model: "", color: "" };
+          this.setState({
+            car: car,
+            edit: false,
+            carmaster: carmasterData,
+          });
         }
-        else {
-            let car={ id:"",price:"",kms:"",year:"",model:"",color:""};
-            this.setState({
-                car:car, edit:false,
-            })
-
-        }
-    }
+      }
+      
 
     handleChange =(e)=>{
         const {currentTarget:input }=e;
@@ -60,7 +68,11 @@ class AddCar extends Component{
 
         const {edit}=this.state
 
-        const {models,colors}=this.state;
+        const {models,carmaster}=this.state;
+        let col=model?carmaster.find((c1)=>c1.model===model):"";
+        let colors=[];
+        colors=col?col.colors:[];
+console.log("carmast",model,col);
 
         return( <div className="container">
               <div className="form-group">

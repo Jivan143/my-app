@@ -19,6 +19,9 @@ app.listen( port,()=> console.log(`Node app listening on port ${port}!`));
 let {CarData}=require("./Car.js");
 let {CarDetails}=require("./Car.js");
 
+app.get("/carmaster",function(req,res){
+    res.send(CarDetails);
+})
 app.get("/cars", function (req, res) {
     let { maxprice, minprice, sort, fuel,type,city="" } = req.query;
     // let cityarr=city.split(",")
@@ -56,9 +59,6 @@ app.get("/cars", function (req, res) {
     res.send(arr1);
 });
 
-app.get("/carmaster",function(req,res){
-    res.send(CarDetails);
-})
 app.get("/cars/:id",function(req,res){
     let id=req.params.id;
     let arr1=CarData.find((s1)=>s1.id===id);

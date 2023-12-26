@@ -1,7 +1,7 @@
 {
   "projects": {
-    "default": "customerapp-1e2eb",
-    "build": "customerapp-1e2eb",
+    "default": "myfirstproject-234",
+    "build": "myfirstproject-234",
     "build1": "myexpproject-db906"
   },
   "targets": {},

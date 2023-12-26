@@ -17,7 +17,6 @@ class Carss extends Component{
         let queryParams = queryString.parse(this.props.location.search);
         let searchStr = this.makeSearchString(queryParams);
         console.log("abc",searchStr);
-
         console.log("car",id);
         let resposne =await http.get(`/cars?${searchStr}`);
         let {data}=resposne;
