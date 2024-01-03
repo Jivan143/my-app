@@ -16,7 +16,7 @@ app.use(function (req, res, next) {
 
   next();
 });
-const port = 2410;
+var port = process.env.PORT ||2410;
 
 let connData = {
     host: "localhost",
@@ -48,10 +48,8 @@ app.get("/svr/employess", (req, res) => {
     let gender = req.query.gender;
     let connection = mysql.createConnection(connData);
 
-    // Start with the base SELECT query
     let sql = "SELECT * FROM employess";
 
-    // Check if any filter parameters are provided
     if (department || designation || gender) {
         sql += " WHERE ";
 

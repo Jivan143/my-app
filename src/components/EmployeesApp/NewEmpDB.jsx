@@ -17,9 +17,10 @@ class NewEmpDB extends Component{
         if(prevProps!==this.props) this.fetchdata();
     }
     async fetchdata(){
-        const{id}=this.props.match.params;
-        if(id){
-            let response=await http.get(`/svr/employess/${id}`);
+        const{empCode}=this.props.match.params;
+        console.log('ww',empCode);
+        if(empCode){
+            let response=await http.get(`/svr/employess/${empCode}`);
             let {data}=response;
             // console.log("ab",data[0]);
             this.setState({employees:data[0],edit:true });

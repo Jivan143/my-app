@@ -2,7 +2,7 @@ let express = require("express");
 let mysql = require("mysql");
 
 let app = express();
-let port = 2410;
+let port = process.env.PORT || 2410;
 
 app.use(express.json());
 

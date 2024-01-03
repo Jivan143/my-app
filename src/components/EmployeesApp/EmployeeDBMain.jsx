@@ -15,7 +15,7 @@ render(){
 
       <Switch>
       <Route path="/employees/add" component={NewEmpDB} />
-      <Route path="/employees/:id/edit" component={NewEmpDB} />
+      <Route path="/employees/:empCode/edit" component={NewEmpDB} />
       <Route path="/employees/:empCode/delete" component={EmpDltDb} />
       <Route path="/employees" component={EmployeeeDB} />
 

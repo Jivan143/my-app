@@ -3,16 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@supabase/supabase-js": "^2.39.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.0",
     "bootstrap": "^5.3.2",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "firebase": "^10.5.2",
     "font-awesome": "^4.7.0",
     "jquery": "^3.7.1",
     "mysql": "^2.18.1",
+    "pg": "^8.11.3",
     "popper.js": "^1.16.1",
     "query-string": "^8.1.0",
     "react": "^18.2.0",
@@ -24,9 +27,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "node employeess.js",
-    "build": "npm run build",
-    "test": "echo\"Error no test specified\"&& exit 1",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "recho\"Error:no test specified\"&&exit 1",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -48,8 +51,11 @@
     ]
   },
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
-  "main": "node employeess.js",
+  "main": "node employe2.js",
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "supabase": "^1.127.4"
+  }
 }
