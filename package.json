@@ -27,7 +27,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node employe2.js",
     "build": "react-scripts build",
     "test": "recho\"Error:no test specified\"&&exit 1",
     "eject": "react-scripts eject"
