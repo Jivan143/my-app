@@ -11,12 +11,14 @@ import MainComponentCar from './components/cardata/MainComponentCar.jsx';
 import Books8 from './components/booksapp/Books8.jsx';
 import MainBooks8 from './components/booksapp/MainBooks8.jsx';
 import EmployeeMain from './components/EmployeesApp/EmployeeDBMain.jsx';
+import MobileTable from './components/mobileApp/mobileDBtable.jsx';
+import MobileDBMain from './components/mobileApp/mobileDBMain.jsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-    <EmployeeMain />
+    <MobileDBMain />
     </BrowserRouter>
   </React.StrictMode>
 );

@@ -27,7 +27,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "node employe2.js",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "recho\"Error:no test specified\"&&exit 1",
     "eject": "react-scripts eject"
@@ -51,7 +51,7 @@
     ]
   },
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
-  "main": "node employe2.js",
+  "main": "node mobile2.js",
   "keywords": [],
   "author": "",
   "license": "ISC",

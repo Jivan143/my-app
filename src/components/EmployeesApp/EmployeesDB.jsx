@@ -7,7 +7,7 @@ class EmployeeeDB extends Component{
 
     state={
         employess:[],
-        departments:["Finance", "HR", "Technology", "Marketing"],
+        departments:["Finance", "HR", "Technology", "Marketing", "Operations"],
         designations:["VP","Manager","Trainee"],
         genders:["Male","Female"],
         department:'',
