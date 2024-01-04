@@ -46,7 +46,7 @@ class NewMobileDB extends Component{
         e.preventDefault();
         let {mobiles,edit}=this.state;
         console.log("handeSubmit",mobiles,edit);
-        edit? this.putData(`/svr/mobiles/${mobiles.id}`,mobiles):
+        edit? this.putData(`/svr/mobiles/${mobiles.id}`,this.state.mobiles):
         this.postData("/svr/mobiles",this.state.mobiles);
 
     };

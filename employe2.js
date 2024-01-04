@@ -102,7 +102,7 @@ app.post("/svr/employess", async (req, res) => {
 
 app.put("/svr/employess/:empCode", async (req, res) => {
   try {
-    const empCode = req.params.empCode;
+    const empCode = +req.params.empCode;
     const { name, department, designation, salary, gender } = req.body;
     const result = await pool.query(
       `UPDATE employeess SET name=$1, department=$2, designation=$3, salary=$4, gender=$5 WHERE "empCode"=$6`,

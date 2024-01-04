@@ -143,19 +143,21 @@ app.post("/svr/mobiles", async (req, res) => {
   }
 });
 
-app.put("/svr/mobiles/:id", async (req, res) => {
-    try {
-      const { id, name, price, brand, ram, rom, os } = req.body;
-      const result = await pool.query(
-        "INSERT INTO mobiles (id, name, price, brand, ram, rom, os) VALUES ($1, $2, $3, $4, $5, $6, $7)",
-        [id, name, price, brand, ram, rom, os]
-      );
-      res.send(result.rows);
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Internal Server Error");
-    }
-  });
+// app.put("/svr/mobiles/:id", async (req, res) => {
+//     try {
+//       const id = req.params.id;
+
+//       const { name, price, brand, ram, rom, os } = req.body;
+//       const result = await pool.query(
+//         "INSERT INTO mobiles (id, name, price, brand, ram, rom, os) VALUES ($1, $2, $3, $4, $5, $6, $7)",
+//         [name, price, brand, ram, rom, os, id]
+//       );
+//       res.send(result.rows);
+//     } catch (err) {
+//       console.error(err);
+//       res.status(500).send("Internal Server Error");
+//     }
+//   });
 app.put("/svr/mobiles/:id", async (req, res) => {
   try {
     const id = req.params.id;
