@@ -28,82 +28,31 @@ const pool = new Pool({
   port: 5432,
 });
 app.get("/svr/mobiles", async (req, res) => {
-    try {
-      const { brand, ram, rom, os } = req.query;
-      let sql = "SELECT * FROM mobiles WHERE true";
-      const values = [];
-  
-      if (brand) {
-        const brandValues = brand.split(",");
-        sql += ` AND brand = ANY($1::text[])`;
-        values.push(brandValues);
-      }
-  
-      if (ram) {
-        const ramValues = ram.split(",");
-        sql += ` AND ram = ANY($1::text[])`;
-        values.push(ramValues);
-      }
-  
-      if (rom) {
-        const romValues = rom.split(",");
-        sql += ` AND rom = ANY($1::text[])`;
-        values.push(romValues);
-      }
-  
-      if (os) {
-        const osValues = os.split(",");
-        sql += ` AND os = ANY($1::text[])`;
-        values.push(osValues);
-      }
-  
-      const result = await pool.query(sql, values);
-      res.send(result.rows);
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Internal Server Error");
-    }
-  });
+  try {
+    const { brand, ram, rom, os } = req.query;
+    let sql = "SELECT * FROM mobiles WHERE true";
+    const values = [];
 
-// app.get("/svr/mobiles", async (req, res) => {
-//     try {
-//       const { brand, ram, rom, os } = req.query;
-//       let sql = "SELECT * FROM mobiles WHERE true";
-//       const values = [];
-//   console.log(brand,ram,rom,os);
-//       if (brand) {
-//         const brandValues = brand.split(",");
-//         sql += ` AND brand = ANY($1::text[])`;
-//         values.push(brandValues);
-//       }
-  
-//       if (ram) {
-//         const ramValues = ram.split(",");
-//         sql += ` AND ram = ANY($1::text[])`;
-//         values.push(ramValues);
-//       }
-  
-//       if (rom) {
-//         const romValues = rom.split(",");
-//         sql += ` AND rom = ANY($1::text[])`;
-//         values.push(romValues);
-//       }
-  
-//       if (os) {
-//         const osValues = os.split(",");
-//         sql += ` AND os = ANY($1::text[])`;
-//         values.push(osValues);
-//       }
-  
-//       const result = await pool.query(sql, [values.flat()]);
-//       res.send(result.rows);
-//     } catch (err) {
-//       console.error(err);
-//       res.status(500).send("Internal Server Error");
-//     }
-//   });
-  
+    const addCondition = (paramValues, paramName) => {
+      if (paramValues && paramValues.length > 0) {
+        const placeholders = paramValues.map((_, index) => `$${values.length + index + 1}`).join(', ');
+        sql += ` AND ${paramName} = ANY(ARRAY[${placeholders}])`;
+        values.push(...paramValues);
+      }
+    };
 
+    addCondition(brand && brand.split(','), 'brand');
+    addCondition(ram && ram.split(','), 'ram');
+    addCondition(rom && rom.split(','), 'rom');
+    addCondition(os && os.split(','), 'os');
+
+    const result = await pool.query(sql, values);
+    res.send(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+});
 app.get("/svr/mobiles/:id", async (req, res) => {
     try {
       let id = req.params.id;
@@ -143,21 +92,19 @@ app.post("/svr/mobiles", async (req, res) => {
   }
 });
 
-// app.put("/svr/mobiles/:id", async (req, res) => {
-//     try {
-//       const id = req.params.id;
-
-//       const { name, price, brand, ram, rom, os } = req.body;
-//       const result = await pool.query(
-//         "INSERT INTO mobiles (id, name, price, brand, ram, rom, os) VALUES ($1, $2, $3, $4, $5, $6, $7)",
-//         [name, price, brand, ram, rom, os, id]
-//       );
-//       res.send(result.rows);
-//     } catch (err) {
-//       console.error(err);
-//       res.status(500).send("Internal Server Error");
-//     }
-//   });
+app.put("/svr/mobiles/:id", async (req, res) => {
+    try {
+      const { id, name, price, brand, ram, rom, os } = req.body;
+      const result = await pool.query(
+        "INSERT INTO mobiles (id, name, price, brand, ram, rom, os) VALUES ($1, $2, $3, $4, $5, $6, $7)",
+        [id, name, price, brand, ram, rom, os]
+      );
+      res.send(result.rows);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Internal Server Error");
+    }
+  });
 app.put("/svr/mobiles/:id", async (req, res) => {
   try {
     const id = req.params.id;
