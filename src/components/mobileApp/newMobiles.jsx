@@ -68,11 +68,11 @@ class NewMobileDB extends Component{
         const {brands,rams,roms,oss}=this.state;
 
         return( <div className="container">
-              <div className="form-group">
+              {/* <div className="form-group">
                 <label>Mobile Id</label>
                 <input type="number" className="form-control" id="id" name="id" placeholder="Enter  Id" disabled={edit}
                 value={id} onChange={this.handleChange}    />
-            </div>
+            </div> */}
              <div className="form-group">
                 <label>Mobile Name</label>
                 <input type="text" className="form-control" id="name" name="name" placeholder="Enter  Name"
