@@ -27,33 +27,49 @@ const pool = new Pool({
   password: "Jeevan#2021",
   port: 5432,
 });
+// ... (previous code)
+
 app.get("/svr/mobiles", async (req, res) => {
-    try {
-      const { brand, ram, rom, os } = req.query;
-      let sql = "SELECT * FROM mobiles WHERE true";
-      const values = [];
-  
-      const addCondition = (paramValues, paramName) => {
-        if (paramValues && paramValues.length > 0) {
-          const placeholders = paramValues.map((_, index) => `$${values.length + index + 1}`).join(', ');
-          sql += ` AND ${paramName} = ANY(ARRAY[${placeholders}])`;
-          values.push(...paramValues);
+  try {
+    const { brand, ram, rom, os, sort } = req.query;
+    let sql = "SELECT * FROM mobiles WHERE true";
+    const values = [];
+
+    const addCondition = (paramValues, paramName) => {
+      if (paramValues && paramValues.length > 0) {
+        const placeholders = paramValues.map((_, index) => `$${values.length + index + 1}`).join(', ');
+        sql += ` AND ${paramName} = ANY(ARRAY[${placeholders}])`;
+        values.push(...paramValues);
+      }
+    };
+
+    addCondition(brand && brand.split(','), 'brand');
+    addCondition(ram && ram.split(','), 'ram');
+    addCondition(rom && rom.split(','), 'rom');
+    addCondition(os && os.split(','), 'os');
+
+    if (sort) {
+      const sortParams = sort.split(',');
+      const validSortColumns = ['id', 'name', 'price', 'brand', 'ram', 'rom', 'os'];
+      
+      sortParams.forEach((param) => {
+        const [column, order] = param.split(':');
+        if (validSortColumns.includes(column)) {
+          sql += ` ORDER BY "${column}" ${order || 'ASC'}`;
         }
-      };
-  
-      addCondition(brand && brand.split(','), 'brand');
-      addCondition(ram && ram.split(','), 'ram');
-      addCondition(rom && rom.split(','), 'rom');
-      addCondition(os && os.split(','), 'os');
-  
-      const result = await pool.query(sql, values);
-      res.send(result.rows);
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Internal Server Error");
+      });
     }
-  });
-  
+
+    const result = await pool.query(sql, values);
+    res.send(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// ... (remaining code)
+
 
 
 

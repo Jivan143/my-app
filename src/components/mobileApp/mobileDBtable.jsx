@@ -15,6 +15,7 @@ class MobileTable extends Component{
         rom:'',
         os:'',
         brand:'',
+        sort:'',
     }
     
     async fetchData() {
@@ -22,7 +23,9 @@ class MobileTable extends Component{
         let queryParams = queryString.parse(this.props.location.search);
         let searchStr = this.makeSearchString(queryParams);
         console.log("abc",searchStr);
-        let {ram,rom,os}=this.state;
+        let {ram,rom,os,sort}=this.state;
+        searchStr = this.addToQueryString(searchStr, "sort", sort);
+
         console.log("empl",id);
         let resposne =await http.get(`/svr/mobiles?${searchStr}`);
         let {data}=resposne;
@@ -46,15 +49,23 @@ class MobileTable extends Component{
           search: searchString,
         });
       };
+      handlesort = (sort) => () => {
+        const { sort: currentSortBy } = this.state;
+        const newSortBy = currentSortBy === sort ? "" : sort;
+        this.setState({ sort: newSortBy }, () => this.fetchData());
+      };
+      
     
       makeSearchString = (options) => {
-        let {  ram,rom,brand,os} = options;
+        let {  ram,rom,brand,os,sort} = options;
         let searchStr = "";
         // searchStr = this.addToQueryString(searchStr, "page", page);
         searchStr = this.addToQueryString(searchStr, "ram", ram);
         searchStr = this.addToQueryString(searchStr, "rom",rom );
         searchStr = this.addToQueryString(searchStr, "brand", brand);
         searchStr = this.addToQueryString(searchStr, "os", os);
+        searchStr = this.addToQueryString(searchStr, "sort", sort);
+
         // searchStr = this.addToQueryString(searchStr, "payment", payment);
         return searchStr;
       };
@@ -89,13 +100,13 @@ class MobileTable extends Component{
                     </div>
                 <div className="col-9">
             <div className="row border bg-info text-light">
-            <div className="col-1 border">ID</div>
-            <div className="col-2 border">Name</div>
-            <div className="col-2 border">Price</div>
-            <div className="col-2 border">Brand</div>
-            <div className="col-1 border">Ram</div>
-            <div className="col-1 border">Rom</div>
-            <div className="col-1 border">OS</div>
+            <div className="col-1 border" onClick={this.handlesort("id")}>ID</div>
+            <div className="col-2 border"onClick={this.handlesort("name")}>Name</div>
+            <div className="col-2 border"onClick={this.handlesort("price")}>Price</div>
+            <div className="col-2 border"onClick={this.handlesort("brand")}>Brand</div>
+            <div className="col-1 border"onClick={this.handlesort("ram")}>Ram</div>
+            <div className="col-1 border"onClick={this.handlesort("rom")}>Rom</div>
+            <div className="col-1 border"onClick={this.handlesort("os")}>OS</div>
             <div className="col-2"></div>
             </div>
             {mobiles.map((ele,index)=>(

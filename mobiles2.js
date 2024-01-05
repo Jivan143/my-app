@@ -29,7 +29,7 @@ const pool = new Pool({
 });
 app.get("/svr/mobiles", async (req, res) => {
   try {
-    const { brand, ram, rom, os } = req.query;
+    const { brand, ram, rom, os, sort } = req.query;
     let sql = "SELECT * FROM mobiles WHERE true";
     const values = [];
 
@@ -46,6 +46,18 @@ app.get("/svr/mobiles", async (req, res) => {
     addCondition(rom && rom.split(','), 'rom');
     addCondition(os && os.split(','), 'os');
 
+    if (sort) {
+      const sortParams = sort.split(',');
+      const validSortColumns = ['id', 'name', 'price', 'brand', 'ram', 'rom', 'os'];
+      
+      sortParams.forEach((param) => {
+        const [column, order] = param.split(':');
+        if (validSortColumns.includes(column)) {
+          sql += ` ORDER BY "${column}" ${order || 'ASC'}`;
+        }
+      });
+    }
+
     const result = await pool.query(sql, values);
     res.send(result.rows);
   } catch (err) {
@@ -53,6 +65,7 @@ app.get("/svr/mobiles", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
 app.get("/svr/mobiles/:id", async (req, res) => {
     try {
       let id = req.params.id;
