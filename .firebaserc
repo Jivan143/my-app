@@ -1,7 +1,7 @@
 {
   "projects": {
-    "default": "myfirstproject-234",
-    "build": "myfirstproject-234",
+    "default": "assignment-a8b1",
+    "build": "assignment-a8b1",
     "build1": "myexpproject-db906"
   },
   "targets": {},
