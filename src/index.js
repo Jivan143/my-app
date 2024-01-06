@@ -13,12 +13,14 @@ import MainBooks8 from './components/booksapp/MainBooks8.jsx';
 import EmployeeMain from './components/EmployeesApp/EmployeeDBMain.jsx';
 import MobileTable from './components/mobileApp/mobileDBtable.jsx';
 import MobileDBMain from './components/mobileApp/mobileDBMain.jsx';
+import AssignmentNavbar from './components/zzzAssignment8b/AssignmentNavBar.jsx';
+import AssignmentMain from './components/zzzAssignment8b/Assignment8bMain.jsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-    <MobileDBMain />
+    <AssignmentMain />
     </BrowserRouter>
   </React.StrictMode>
 );
