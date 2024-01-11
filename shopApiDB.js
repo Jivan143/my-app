@@ -62,7 +62,7 @@ app.get("/shops", async function (req, res) {
       const insertResult = await pool.query("INSERT INTO shops VALUES ($1, $2, $3)", [
         body.shopid,
         body.name,
-        body.location,
+        body.rent,
       ]);
   
       res.send(body);
@@ -73,12 +73,12 @@ app.get("/shops", async function (req, res) {
   
   app.put("/shops/:shopid", async function (req, res) {
     try {
-      const id = +req.params.shopid;
+      const shopid = +req.params.shopid;
       const body = req.body;
   
       const updateResult = await pool.query(
-        `UPDATE shops SET name = $1, location = $2 WHERE "shopid" = $3`,
-        [body.name, body.location, id]
+        `UPDATE shops SET name = $1, rent = $2 WHERE "shopid" = $3`,
+        [body.name, body.rent, shopid]
       );
   
       res.send(body);
@@ -149,49 +149,55 @@ app.get("/products", async function (req, res) {
         res.status(500).send("Internal Server Error");
     }
   });
-  
   app.get("/purchases", async function (req, res) {
     try {
-      const { sort, shop, product, minqty } = req.query;
-      let sql = "SELECT * FROM purchases";
-  
-      if (shop || product || minqty) {
-        sql += " WHERE ";
-  
+        const { sort, shop, product } = req.query;
+        let sql = "SELECT * FROM purchases WHERE 1=1";
+
         if (shop) {
-          const shopArr = await pool.query(`SELECT shopid FROM shops WHERE "name" = $1`, [shop]);
-          const shopId = shopArr.rows.length > 0 ? shopArr.rows[0].shopid : null;
-          if (shopId) sql += `shopid = ${shopId} AND `;
+            const shopIdArr = await pool.query(`SELECT shopid FROM shops WHERE "shopid" = $1`, [shop.substring(2, 4)]);
+            const shopId = shopIdArr.rows.length > 0 ? shopIdArr.rows[0].shopid : null;
+            if (shopId) sql += ` AND shopid = ${shopId}`;
         }
-  
+
         if (product) {
-          const prodArr = await pool.query(`SELECT productid FROM products WHERE "productname" = $1`, [
-            product,
-          ]);
-          const productid = prodArr.rows.length > 0 ? prodArr.rows[0].productid : null;
-          if (productid) sql += `productid = ${productid} AND `;
+            console.log("product1", product);
+            const productIds = product.split(',').map(ele => parseInt(ele.substring(2), 10));
+            console.log("product2", productIds);
+            if (productIds.length === 1) {
+                sql += ` AND productid = '${productIds[0]}'`;
+            } else if (productIds.length > 1) {
+                sql += ` AND productid IN (${productIds.join(',')})`;
+            }
         }
-  
-        if (minqty) {
-          sql += `quantity >= ${minqty} AND `;
+
+        if (sort) {
+            switch (sort) {
+                case "QtyAsc":
+                    sql += " ORDER BY quantity ASC";
+                    break;
+                case "QtyDesc":
+                    sql += " ORDER BY quantity DESC";
+                    break;
+                case "ValueAsc":
+                    sql += " ORDER BY price * quantity ASC";
+                    break;
+                case "ValueDesc":
+                    sql += " ORDER BY price * quantity DESC";
+                    break;
+                default:
+                    break;
+            }
         }
-  
-        if (sql.endsWith("AND ")) {
-          sql = sql.slice(0, -4);
-        }
-      }
-  
-      if (sort === "QtyAsc") sql += " ORDER BY quantity ASC";
-      else if (sort === "QtyDesc") sql += " ORDER BY quantity DESC";
-      else if (sort === "ValueAsc") sql += " ORDER BY price * quantity ASC";
-      else if (sort === "ValueDesc") sql += " ORDER BY price * quantity DESC";
-  
-      const result = await pool.query(sql);
-      res.send(result.rows);
+
+        const result = await pool.query(sql);
+        res.send(result.rows);
     } catch (error) {
+        console.error(error);
         res.status(500).send("Internal Server Error");
     }
-  });
+});
+
 
   app.get("/purchases/:id", async function (req, res) {
     try {
@@ -281,7 +287,7 @@ app.get("/purchases/shops/:id", async function (req, res) {
     try {
       const shopId = +req.params.id;
       const result = await pool.query(
-        `SELECT "productid", SUM(quantity) AS totalQuantity FROM purchases WHERE "shopid" = $1 GROUP BY "productid"`,
+        `SELECT "productid" AS id, SUM(quantity) AS totalQuantity FROM purchases WHERE "shopid" = $1 GROUP BY "productid"`,
         [shopId]
       );
   
@@ -290,32 +296,58 @@ app.get("/purchases/shops/:id", async function (req, res) {
         return result;
       }, {});
   
-      res.send(totalPurchase);
+      res.send(result.rows);
     } catch (error) {
       console.error(error);
       res.status(500).send("Internal Server Error");
     }
   });
-  
+
   app.get("/totalPurchase/product/:id", async function (req, res) {
     try {
-      const productId = +req.params.id;
-      const result = await pool.query(
-        `SELECT "shopid", SUM(quantity) AS totalQuantity FROM purchases WHERE "productid" = $1 GROUP BY "shopid"`,
-        [productId]
-      );
-  
-      const totalPurchase = result.rows.reduce((result, purchase) => {
-        result[purchase.shopid] = purchase.totalQuantity;
-        return result;
-      }, {});
-  
-      res.send(totalPurchase);
+        const productId = +req.params.id;
+        const result = await pool.query(
+            `SELECT "shopid" AS id, SUM(quantity) AS totalQuantity FROM purchases WHERE "productid" = $1 GROUP BY "shopid"`,
+            [productId]
+        );
+        console.log(result,"121");
+
+        const totalPurchase = result.rows.reduce((result, purchase) => {
+            result[purchase.shopid] = purchase.totalQuantity;
+            console.log(result,"122");
+            return result;
+            
+        }, {});
+        console.log(totalPurchase,"123");
+
+        res.send(result.rows);
     } catch (error) {
-      console.error(error);
-      res.status(500).send("Internal Server Error");
+        console.error(error);
+        res.status(500).send("Internal Server Error");
     }
-  });
+});
+
+
+  
+  // app.get("/totalPurchase/product/:id", async function (req, res) {
+  //   try {
+  //     const productId = +req.params.id;
+  //     const result = await pool.query(
+  //       `SELECT "shopid", SUM(quantity) AS totalQuantity FROM purchases WHERE "productid" = $1 GROUP BY "shopid"`,
+  //       [productId]
+  //     );
+  
+  //     const totalPurchase = result.rows.reduce((result, purchase) => {
+  //       result[purchase.shopid] = purchase.totalQuantity;
+  //       return result;
+  //     }, {});
+  
+  //     res.send(totalPurchase);
+  //   } catch (error) {
+  //     console.error(error);
+  //     res.status(500).send("Internal Server Error");
+  //   }
+  // });
   
   
   // ...

@@ -6,6 +6,7 @@ import http from "./AssignmentHttpservices";
 class TotalPurchases extends Component {
   state = {
     totalPurchases: {},
+    totalpur:[],
   };
 
   async fetchData() {
@@ -21,7 +22,7 @@ class TotalPurchases extends Component {
         console.log("Data for shop:", data);
 
         this.setState({
-          totalPurchases: data,
+          totalpur: data,
         });
       }
 
@@ -31,7 +32,7 @@ class TotalPurchases extends Component {
         console.log("Data for product:", data);
 
         this.setState({
-          totalPurchases: data,
+          totalpur: data,
         });
       }
     } catch (error) {
@@ -50,19 +51,33 @@ class TotalPurchases extends Component {
   }
 
   render() {
-    const { totalPurchases } = this.state;
+    const { totalPurchases ,totalpur} = this.state;
+    // const arrayFromObject = Object.values(totalPurchases);
+    const { shopid } = this.props.match.params;
+    const { productid } = this.props.match.params;
+    let pr=shopid?"Total Purchases by Shop":productid?"Total Purchases by Product":"";
 
     return (
-      <div className="container  text-dark">
-        <div className="row"> 1:{totalPurchases[1]}</div>
-        <div className="row"> 2:{totalPurchases[2]}</div>
-        <div className="row"> 3:{totalPurchases[3]}</div>
-        <div className="row"> 4:{totalPurchases[4]}</div>
-        <div className="row"> 5:{totalPurchases[5]}</div>
-        <div className="row"> 6:{totalPurchases[6]}</div>
-        <div className="row"> 7:{totalPurchases[7]}</div>
-        <div className="row"> 8:{totalPurchases[8]}</div>
 
+      <div className="container text-center text-dark">
+                <h3>{pr}</h3>
+        {totalpur.length>0?(<div>
+        <div className="row  bg-info text-light">
+        <div className="col-6 border">Id</div>
+        <div className="col-6">Total Purchases</div>
+        </div>
+        {totalpur.map((ele,index)=><div className="row " key={index}>
+          <div className="col-6 border">{ele.id}</div>
+        <div className="col-6 border">{ele.totalquantity}</div>
+          </div>
+     
+        )}</div>
+        ):(
+          <div className="h4 text-danger">
+            No Purchases
+          </div>
+        )
+        }
       
       </div>
     );

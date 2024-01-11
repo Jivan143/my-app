@@ -54,7 +54,7 @@ class AssignmentProducts extends Component{
             <Link to={`/purchases/products/${ele.productid}`} className="  btn btn-success btn-sm ">Purchases</Link>
             </div>
             <div className="col-2 border">
-            <Link to={`/totalPurchase/shop/${ele.productid}`} className="  btn btn-warning btn-sm ">Total Purchases.</Link>
+            <Link to={`/totalPurchase/product/${ele.productid}`} className="  btn btn-warning btn-sm ">Total Purchases.</Link>
                     </div>
             <div className="col-1 border">
             <Link to={`/products/${ele.productid}/edit`} className="  btn btn-success btn-sm ">Edit</Link>

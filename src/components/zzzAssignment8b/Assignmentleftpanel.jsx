@@ -11,7 +11,6 @@ class AssignmetleftPanel extends Component{
     async fetchData() {
         let resposne =await http.get(`/shops`);
         let {data}=resposne;
-        console.log("empl",data.shops);
 
         this.setState({
             shops:data,
@@ -20,7 +19,6 @@ class AssignmetleftPanel extends Component{
     async fetchData2() {
         let resposne =await http.get(`/products`);
         let {data}=resposne;
-        console.log("empl",data);
 
         this.setState({
             products:data,
@@ -49,7 +47,6 @@ class AssignmetleftPanel extends Component{
             options[input.name] = input.value;
         }
     
-        console.log("OptionsCB", options);
         this.props.onOptionChange(options);
     };
     
@@ -66,7 +63,6 @@ class AssignmetleftPanel extends Component{
             }
         }
     
-        console.log(inpValues, inpArr);
         return inpArr.join(",");
     };
     
@@ -78,13 +74,13 @@ class AssignmetleftPanel extends Component{
                 <div className="form-check m-2" key={index}>
                     <input
                         className="form-check-input"
-                        value={opt}
+                        value={opt.id}
                         type="checkbox"
                         name={name}
-                        checked={values.includes(opt)}
+                        checked={values.includes(opt.id)}
                         onChange={this.handleChange}
                     />
-                    <label className="form-check-label">{opt}</label>
+                    <label className="form-check-label">{opt.name}</label>
                 </div>
             ))}
         </React.Fragment>
@@ -95,10 +91,10 @@ class AssignmetleftPanel extends Component{
         <React.Fragment>
             <h5 className="form-check-label font-weight-bold">{label}</h5>
             {arr.map((opt)=>(
-                <div className="form-check m-2" key={opt}>
-                    <input className="form-check-input" value={opt} type="radio" name={name}
-                    checked={values===opt} onChange={this.handleChange}  />
-                    <label className="form-check-label">{opt}</label>
+                <div className="form-check m-2" key={opt.id}>
+                    <input className="form-check-input" value={opt.id} type="radio" name={name}
+                    checked={values===opt.id} onChange={this.handleChange}  />
+                    <label className="form-check-label">{opt.name}</label>
                 </div>
             ))}
         </React.Fragment>
@@ -126,11 +122,10 @@ render (){
     const {sort="",shop="",product=""}=this.props.options;
     let {sorts}=this.props;
     const {products,shops}=this.state
-    let prodarr=products.map((ele)=>ele.productname);
-    let shoarr=shops.map((ele)=>ele.name);
+    let prodarr = products.map((ele) => ({ name: ele.productname, id: 'pr'+ele.productid }));
+    let shoarr = shops.map((ele) => ({ name: ele.name, id: 'st'+ele.shopid }));
 
-
-   
+   console.log("prodarr",prodarr,"shoarr",shoarr,shops);
 
     return (
         <div className="row  m-1">

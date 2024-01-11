@@ -113,18 +113,17 @@ app.get("/purchases",function(req,res){
     let shop=req.query.shop;
     let product=req.query.product;
     console.log(shop);
-    let minqty=+req.query.minqty;
-    let catagery=req.query.category;
-    let shoparr=Data.shops.find((ele)=>ele.name==shop);
+    let shoparr=Data.shops.find((ele)=>'st'+ele.shopid==shop);
     let shopid= shoparr?shoparr.shopid:null;
-    let prodArr=Data.products.find((ele)=>ele.productname==product);
-    let productid= prodArr?prodArr.productid:null;
+    let prodArr = product ?
+    Data.products.filter((ele) => product.includes('pr'+ele.productid)) :
+    null;
+    let productid= prodArr?prodArr:null;
+    console.log(prodArr,productid,product);
     let arr1=Data.purchases;
     if(shopid)  { arr1=arr1.filter((s1)=>s1.shopid === shopid);
     }
-    if(productid)  { arr1=arr1.filter((s1)=>s1.productid === productid);
-    }
-    if(minqty)  { arr1=arr1.filter((s1)=>s1.quantity >= minqty);
+    if(productid)  { arr1=arr1.filter((s1)=>(productid.find((ele)=>ele.productid===s1.productid)));
     }
     if(sort==="QtyAsc")
     arr1.sort((s1,s2)=>s1.quantity-s2.quantity);
@@ -196,21 +195,25 @@ app.get ("/purchases/:id",function(req,res){
 
 });
 
+
+
 app.get("/totalPurchase/shop/:id", function (req, res) {
     try {
         let shopid = +req.params.id;
-        let totalPurchase = Data.purchases
+        let totalPurchaseArray = Object.values(Data.purchases
             .filter((purchase) => purchase.shopid === shopid)
             .reduce((result, purchase) => {
                 if (!result[purchase.productid]) {
-                    result[purchase.productid] = 0;
+                    result[purchase.productid] = {
+                        id: purchase.productid,
+                        totalquantity: 0
+                    };
                 }
-                result[purchase.productid] += purchase.quantity;
+                result[purchase.productid].totalquantity += purchase.quantity;
                 return result;
-            }, {});
+            }, {}));
 
-        res.send(totalPurchase);
-        console.log(totalPurchase);
+        res.send(totalPurchaseArray);
     } catch (error) {
         console.error(error);
         res.status(500).send("Internal Server Error");
@@ -220,19 +223,24 @@ app.get("/totalPurchase/shop/:id", function (req, res) {
 app.get("/totalPurchase/product/:id", function (req, res) {
     try {
         let productid = +req.params.id;
-        let totalPurchase = Data.purchases
+        let totalPurchaseArray = Object.values(Data.purchases
             .filter((purchase) => purchase.productid === productid)
             .reduce((result, purchase) => {
                 if (!result[purchase.shopid]) {
-                    result[purchase.shopid] = 0;
+                    result[purchase.shopid] = {
+                        id: purchase.shopid,
+                        totalquantity: 0
+                    };
                 }
-                result[purchase.shopid] += purchase.quantity;
+                result[purchase.shopid].totalquantity += purchase.quantity;
                 return result;
-            }, {});
+            }, {}));
 
-        res.send(totalPurchase);
+        res.send(totalPurchaseArray);
     } catch (error) {
         console.error(error);
         res.status(500).send("Internal Server Error");
     }
 });
+
+

@@ -7,7 +7,7 @@ class AssignmentNavbar extends React.Component {
 
     render() {
         return (
-            <nav className="navbar navbar-expand-sm navbar-dark bg-dark p-2 row col-12">
+            <nav className="navbar navbar-expand-sm navbar-dark bg-dark  row">
                 <Link className="navbar-brand col" to="/">
                     Shops System
                 </Link>
